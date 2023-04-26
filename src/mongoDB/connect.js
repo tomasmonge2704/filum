@@ -1,7 +1,7 @@
 // Conexión a la base de datos de MongoDB Atlas
 const mongoose = require('mongoose');
 const url = process.env.MongoURL
-console.log(url)
+
 async function connectMongoDB() {
   try {
     mongoose.set('strictQuery', false)
