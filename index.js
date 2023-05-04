@@ -13,9 +13,10 @@ const indexRoutes = require('./src/routes/inicio');
 const exphbs = require('express-handlebars')
 const {connectMongoDB} = require('./src/mongoDB/connect')
 const flash = require('connect-flash');
-
+var cors = require('cors')
 connectMongoDB()
 // Configuración de Express
+app.use(cors())
 app.use(express.static('views'))
 app.engine("hbs", exphbs.engine({
   extname: ".hbs",
