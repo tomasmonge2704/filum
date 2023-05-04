@@ -8,7 +8,7 @@ const jwtSecret = process.env.JWT_SECRET;
 router.post('/api', passport.authenticate('login', {
     failureFlash: '¡Inicio de sesión fallido! Usuario o contraseña incorrectos.'
 }), (req, res) => {
-    const token = jwt.sign({ userId: req.user.id }, jwtSecret);
+    const token = jwt.sign({ userId: req.user.id }, jwtSecret, { algorithm: 'HMACSHA256' });
     res.json({ token });
 });
 
