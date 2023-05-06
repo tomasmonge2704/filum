@@ -3,12 +3,13 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { passport } = require('../passport');
 const jwtSecret = process.env.JWT_SECRET;
-
+const UsuarioModel = require("../mongoDB/userSchema");
 
 router.post('/api', passport.authenticate('login', {
     failureFlash: '¡Inicio de sesión fallido! Usuario o contraseña incorrectos.'
-}), (req, res) => {
-    const token = jwt.sign({ userId: req.user.id }, jwtSecret);
+}), async (req, res) => {
+    const user = await UsuarioModel.findOne({ username: req.user.username }).lean()
+    const token = jwt.sign({ user }, jwtSecret);
     res.json({ token });
 });
 

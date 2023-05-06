@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('./mongoDB/userSchema');
 const {isValidPassword,createHash} = require('./bcrypt')
+const jwt = require('jsonwebtoken');
 
 passport.use(
   "login",
@@ -73,9 +74,19 @@ passport.deserializeUser((id, done) => {
   User.findById(id, done);
 });
 
+const vefifyToken = (token) => {
+  const response = jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return false
+    } else {
+      return true
+    }
+  });
+  return response
+}
 // Middleware para verificar si el usuario está autenticado
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() || vefifyToken(req.headers.authentication) === true) {
     return next();
   }
   res.redirect('/login')

@@ -7,7 +7,7 @@ const {isAuthenticated,isAdmin} = require('../passport')
 router.get("/",isAuthenticated, productosController.getProductos);
 
 // Obtener un producto por ID
-router.get("/:id",isAdmin, productosController.getProductoById);
+router.get("/:id",isAuthenticated, productosController.getProductoById);
 
 // Crear un nuevo producto
 router.post("/",isAdmin, productosController.crearProducto);
