@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const usuarioSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   role:{
     type:String,
@@ -18,6 +19,10 @@ const usuarioSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  avatar: {
+    type: String,
+    default: '/avatar.png'
   },
   googleId: {
     type: String,

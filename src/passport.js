@@ -8,15 +8,16 @@ passport.use(
   "login",
   new LocalStrategy((username, password, done) => {
     User.findOne({ username }, (err, user) => {
-      if (err) return done(err);
+      if (err) {
+        return done(err);
+      }
 
       if (!user) {
-        console.log("User Not Found with username " + username);
-        return done(null, false);
+        return done(null, false, { message: 'Usuario no encontrado' });
       }
+
       if (!isValidPassword(user, password)) {
-        console.log("Invalid Password");
-        return done(null, false);
+        return done(null, false, { message: 'Contraseña incorrecta' });
       }
 
       return done(null, user);
@@ -43,7 +44,7 @@ passport.use(
         // Revisa si existe algún usuario que ya tenga ese correo electrónico
         const existingUser = await User.findOne({ mail: req.body.mail });
         if (existingUser) {
-          return done({ mensaje:'El correo electrónico ya está registrado.'});
+          return done({ mensaje:'El correo electrónico ya se encuentra registrado.'});
         }
 
         try {

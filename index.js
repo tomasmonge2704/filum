@@ -47,7 +47,7 @@ app.use('/api/producto', productsRoutes);
 app.use('/api/carrito', cartRoutes);
 app.use('/user', userRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, function() {
     console.log('Servidor iniciado en el puerto ' + PORT);
   });
