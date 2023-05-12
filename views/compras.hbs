@@ -46,26 +46,22 @@
         </div>
         </fieldset>
         <div class="form-group">
-           <fieldset disabled>
-          <label for="name"><b>Username</b></label>
-          <input id="username" value="" class="form-control" type="text" name="username">
-           <fieldset disabled>
-        </div>
-         <div class="form-group">
-          <label for="name"><b>Mail</b></label>
-          <input id="mail" value="" class="form-control" type="text" name="mail">
-        </div>
-        <div class="form-group">
-          <label for="name"><b>password</b></label>
-          <input id="password" value="" class="form-control" type="text" name="password">
+          <label for="name"><b>Status</b></label>
+          <select class="custom-select" id="status" name="status">
+            <option selected>Seleccionar una categoria</option>
+             <option value="Nuevo">Nuevo</option>
+            <option value="Entregado">Entregado</option>
+            <option value="En preparacion">En preparacion</option>
+            <option value="En camino">En camino</option>
+            </select>
         </div>
         <div class="alert alert-success alert-dismissible fade" id="alert" role="alert">
-  <strong>Usuario Actualizado!</strong>
+  <strong>Producto Actualizado!</strong>
 </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="actualizarUsuario()">Save changes</button>
+        <button type="button" class="btn btn-primary" onclick="actualizarCompra()">Save changes</button>
       </div>
     </div>
   </div>
@@ -76,20 +72,28 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th scope="col">Username</th>
-          <th scope="col">Mail</th>
+          <th scope="col">Comprador</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Status</th>
+          <th scope="col">Detalle</th>
           <th scope="col">Editar</th>
-          <th scope="col">Borrar</th>
         </tr>
       </thead>
       <tbody>
-
         {{#each result}}
         <tr>
-          <td>{{this.username}}</td>
-          <td>{{this.mail}}</td>
+          <td>{{this.datosComprador.username}}</td>
+          <td>{{this.productData.precio}}</td>
+          <td>{{this.productData.cantidad}}</td>
+          <td>{{this.status}}</td>
+           <td>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/api/compras/id/{{this._id}}'">
+                Detalle
+            </button>
+          </td>
           <td>
-            <button type="button" class="btn btn-secondary"data-toggle="modal" data-target="#exampleModal" onclick="openModal('{{this.username}}','{{this.mail}}','{{this._id}}')">
+            <button type="button" class="btn btn-secondary"data-toggle="modal" data-target="#exampleModal" onclick="openModal('{{this.status}}','{{this._id}}')">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-pencil-fill" viewBox="0 0 16 16">
                 <path
@@ -98,45 +102,26 @@
               </svg>
             </button>
           </td>
-          <td style="width: 10%;">
-            <button class="btn btn-danger" onclick="deleteUser('{{this.username}}')">X</button>
-          </td>
         </tr>
         {{/each}}
 
       </tbody>
     </table>
-    <form action="/login" method="get">
-      <button class="btn btn-dark mt-5 mb-5">volver al login</button>
-    </form>
-    <form action="/signup" method="get">
-      <button class="btn btn-dark mt-5 mb-5">Agregar un nuevo usuario</button>
-    </form>
+    <form action="/" method="get">
+      <button class="btn btn-dark mt-5 mb-5">Volver</button>
+      </form>
   </div>
 
 <script>
-function openModal(username,mail,id){
-$( "#username" ).val(username);
-$( "#mail" ).val(mail);
+function openModal(nombre,id){
+$( "#status" ).val(status);
 $( "#id" ).val(id);
 }
-function deleteUser(id){
-axios.delete(`/user/${id}`)
-.then((response) => {
-    location.reload();
-    console.log(response)
-})
-.catch((err)=>{
-    console.log(err)
-})
-}
-function actualizarUsuario(){
-const username = $( "#username" ).val();
-const mail = $( "#mail" ).val();
-const password = $( "#password" ).val();
-axios.put(`/user/${username}`,{
-mail:mail,
-password:password
+function actualizarCompra(){
+const status = $( "#status" ).val();
+const id = $( "#id" ).val();
+axios.put(`/api/compras/id/${id}`,{
+status:status
 })
 .then((response) => {
 $( "#alert" ).addClass( "show" );

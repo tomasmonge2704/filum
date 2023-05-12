@@ -9,6 +9,7 @@ const signupRoutes = require('./src/routes/signup');
 const productsRoutes = require('./src/routes/producto');
 const cartRoutes = require('./src/routes/carrito');
 const userRoutes = require('./src/routes/user');
+const comprasRoutes = require('./src/routes/compras')
 const indexRoutes = require('./src/routes/inicio');
 const exphbs = require('express-handlebars')
 const {connectMongoDB} = require('./src/mongoDB/connect')
@@ -46,6 +47,7 @@ app.use('/signup', signupRoutes);
 app.use('/api/producto', productsRoutes);
 app.use('/api/carrito', cartRoutes);
 app.use('/user', userRoutes);
+app.use('/api/compras', comprasRoutes);
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, function() {
