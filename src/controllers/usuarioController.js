@@ -13,11 +13,12 @@ const getUsuarioByUsername = async (req, res) => {
 const actualizarUsuarioByUsername = async (req, res) => {
   try {
     let { password, mail, adress, celular } = req.body;
-    password = createHash(password);
-
     // Objeto auxiliar para almacenar solo los campos definidos
     const updateFields = {};
-    if (password) updateFields.password = password;
+    if (password) {
+      password = createHash(password);
+      updateFields.password = password;
+    }
     if (mail) updateFields.mail = mail;
     if (adress) updateFields.adress = adress;
     if (celular) updateFields.celular = celular;
