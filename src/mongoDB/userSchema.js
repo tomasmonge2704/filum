@@ -24,6 +24,15 @@ const usuarioSchema = new mongoose.Schema({
     type: String,
     default: '/avatar.png'
   },
+  adress:{
+    calle:{type:String},
+    altura:{type:String},
+    piso:{type:String}
+  },
+  celular:{
+    type:String
+  }
+  ,
   googleId: {
     type: String,
     default: null
