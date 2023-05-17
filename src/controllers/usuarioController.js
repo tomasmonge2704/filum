@@ -1,8 +1,12 @@
 const UsuarioModel = require("../mongoDB/userSchema");
-const {createHash} = require('../bcrypt')
+const { createHash } = require("../bcrypt");
+const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWT_SECRET;
 const getUsuarioByUsername = async (req, res) => {
   try {
-    const usuario = await UsuarioModel.findOne({ username: req.params.username });
+    const usuario = await UsuarioModel.findOne({
+      username: req.params.username,
+    });
     if (!usuario) throw new Error("Usuario no encontrado");
     res.json(usuario);
   } catch (error) {
@@ -23,23 +27,27 @@ const actualizarUsuarioByUsername = async (req, res) => {
     if (adress) updateFields.adress = adress;
     if (celular) updateFields.celular = celular;
 
-    const usuario = await UsuarioModel.findOneAndUpdate(
+    const user = await UsuarioModel.findOneAndUpdate(
       { username: req.params.username },
       updateFields,
       { new: true }
     );
 
-    if (!usuario) throw new Error("Usuario no encontrado");
-    res.json(usuario);
+    if (!user) throw new Error("Usuario no encontrado");
+    const token = jwt.sign({ user }, jwtSecret);
+    user.token = token;
+
+    res.json({ user, token });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
 };
 
-
 const eliminarUsuarioByUsername = async (req, res) => {
   try {
-    const usuario = await UsuarioModel.findOneAndDelete({ username: req.params.username });
+    const usuario = await UsuarioModel.findOneAndDelete({
+      username: req.params.username,
+    });
     if (!usuario) throw new Error("Usuario no encontrado");
     res.json(usuario);
   } catch (error) {

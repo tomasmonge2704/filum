@@ -6,6 +6,7 @@ const compraSchema = new mongoose.Schema({
     username: { type: String, required: true },
     metodoPago: { type: String, required: true },
     numeroCuenta: { type: String },
+    envio:{type:String,required:true},
     adress: {
       calle: { type: String },
       altura: { type: String },
@@ -16,7 +17,7 @@ const compraSchema = new mongoose.Schema({
     numeroCuenta: { type: String },
     nombreCuenta: { type: String },
   },
-  productData: {
+  productos:[{
     _id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Producto',
@@ -27,7 +28,8 @@ const compraSchema = new mongoose.Schema({
     imageURL: { type: String, required: true },
     cantidad: { type: Number, required: true },
     descripcion: { type: String, required: true },
-  },
+  }],
+  total:{type:Number,required:true},
   fechaCompra: { type: Date, default: Date.now, required: true },
   fechaRecibido: { type: Date },
 });

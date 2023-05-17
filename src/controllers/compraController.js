@@ -32,8 +32,8 @@ const compraController = {
   },
 
   addCompra: async (req, res) => {
-    const { status, datosComprador, datosVendedor, productData, fechaRecibido } = req.body;
-    const nuevaCompra = new Compra({ status, datosComprador, datosVendedor, productData, fechaRecibido });
+    const { status, datosComprador, datosVendedor, productos,total } = req.body;
+    const nuevaCompra = new Compra({ status, datosComprador, datosVendedor, productos,total });
     try {
       const compraGuardada = await nuevaCompra.save();
       res.json(compraGuardada);
