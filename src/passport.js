@@ -1,11 +1,15 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const User = require('./mongoDB/userSchema');
-const {isValidPassword,createHash} = require('./bcrypt')
+const { isValidPassword, createHash } = require('./bcrypt');
 const jwt = require('jsonwebtoken');
+const clientID = "502059499858-aduohsrmheogleank8obe2p91440vupv.apps.googleusercontent.com";
+const clientSecret = "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";
+const callbackUrl = 'http://localhost:8081/google/callback';
 
 passport.use(
-  "login",
+  'login',
   new LocalStrategy((username, password, done) => {
     User.findOne({ username }, (err, user) => {
       if (err) {
@@ -24,78 +28,86 @@ passport.use(
     });
   })
 );
-//singup
+
 passport.use(
-  "signup",
+  'signup',
   new LocalStrategy(
     {
       passReqToCallback: true,
     },
-     (req, username, password, done) => {
-      // Revisa si existe algún usuario que ya tenga ese username
+    (req, username, password, done) => {
       User.findOne({ username: username }, async function (err, user) {
         if (err) {
-          console.log("Error in SignUp: " + err);
+          console.log('Error in SignUp: ' + err);
           return done(err);
         }
         if (user) {
           return done({ mensaje: 'el usuario ya se encuentra registrado.' });
         }
-        // Revisa si existe algún usuario que ya tenga ese correo electrónico
         const existingUser = await User.findOne({ mail: req.body.mail });
         if (existingUser) {
-          return done({ mensaje:'El correo electrónico ya se encuentra registrado.'});
+          return done({ mensaje: 'El correo electrónico ya se encuentra registrado.' });
         }
 
         try {
           const newUser = {
             username: username,
             password: createHash(password),
-            mail: req.body.mail
+            mail: req.body.mail,
           };
-          // Crear una nueva instancia de Upload y guardarla en la base de datos
           const user = new User(newUser);
           await user.save();
-          // Enviar una respuesta con un mensaje
           return done(null);
         } catch (error) {
           console.error('Error al cargar los archivos', error);
           return done(error);
         }
       });
-      
     }
   )
 );
-passport.serializeUser((user, done) => {
-  done(null, user._id);
+
+passport.use('google', new GoogleStrategy({
+  clientID:clientID,
+  clientSecret:clientSecret,
+  callbackURL:callbackUrl,
+  passReqToCallback: true,
+}, function (request, accessToken, refreshToken, profile, done) {
+  return done(null, profile);
+}));
+
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id, done);
+passport.deserializeUser(function (user, done) {
+  done(null, user);
 });
 
-const vefifyToken = (token) => {
+const verifyToken = (token) => {
   const response = jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
   });
-  return response
-}
-// Middleware para verificar si el usuario está autenticado
+  return response;
+};
+
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated() || vefifyToken(req.headers.authentication) === true) {
+  if (req.isAuthenticated() || verifyToken(req.headers.authentication) === true) {
     return next();
   }
-  res.redirect('/login')
-}
+  res.redirect('/login');
+};
+
 const isAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role == 'admin') {
+  if (req.isAuthenticated() && req.user.role === 'admin') {
     return next();
   }
-  res.redirect('/login')
-}
-module.exports = {passport,isAuthenticated,isAdmin};
+  res.redirect('/login');
+};
+
+module.exports = { passport, isAuthenticated, isAdmin };
