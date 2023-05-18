@@ -1,12 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const User = require('./mongoDB/userSchema');
 const { isValidPassword, createHash } = require('./bcrypt');
 const jwt = require('jsonwebtoken');
-const clientID = "502059499858-aduohsrmheogleank8obe2p91440vupv.apps.googleusercontent.com";
-const clientSecret = "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";
-const callbackUrl = 'https://filum-p9t6.onrender.com/google/callback';
 
 passport.use(
   'login',
@@ -66,15 +62,6 @@ passport.use(
     }
   )
 );
-
-passport.use('google', new GoogleStrategy({
-  clientID:clientID,
-  clientSecret:clientSecret,
-  callbackURL:callbackUrl,
-  passReqToCallback: true,
-}, function (request, accessToken, refreshToken, profile, done) {
-  return done(null, profile);
-}));
 
 
 passport.serializeUser(function (user, done) {

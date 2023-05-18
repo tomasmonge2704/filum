@@ -11,7 +11,6 @@ const productsRoutes = require('./src/routes/producto');
 const cartRoutes = require('./src/routes/carrito');
 const userRoutes = require('./src/routes/user');
 const comprasRoutes = require('./src/routes/compras')
-const googleAuthRoutes = require('./src/routes/googleAuth')
 const indexRoutes = require('./src/routes/inicio');
 const exphbs = require('express-handlebars')
 const {connectMongoDB} = require('./src/mongoDB/connect')
@@ -45,7 +44,6 @@ app.use(passport.session());
 
 //rutas
 app.use('/',indexRoutes)
-app.use('/google',googleAuthRoutes)
 app.use('/login', loginRoutes);
 app.use('/signup', signupRoutes);
 app.use('/api/producto', productsRoutes);
