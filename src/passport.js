@@ -6,7 +6,7 @@ const { isValidPassword, createHash } = require('./bcrypt');
 const jwt = require('jsonwebtoken');
 const clientID = "502059499858-aduohsrmheogleank8obe2p91440vupv.apps.googleusercontent.com";
 const clientSecret = "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";
-const callbackUrl = 'http://localhost:8081/google/callback';
+const callbackUrl = 'https://filum-p9t6.onrender.com/google/callback';
 
 passport.use(
   'login',
