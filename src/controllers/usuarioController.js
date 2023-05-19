@@ -42,7 +42,28 @@ const actualizarUsuarioByUsername = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
-
+const verifyUsuarioByUsername = async (req, res) => {
+  try {
+    let { username,imageURL } = req.body;
+    let user = await UsuarioModel.findOne({ username: username });
+    if (!user) {
+      const newUser = {
+        username: username,
+        password: createHash(username),
+        googleId:"yes",
+        mail: username,
+        avatar:imageURL
+      };
+      user = new UsuarioModel(newUser);
+      await user.save();
+    }
+    const token = jwt.sign({ user }, jwtSecret);
+    user.token = token;
+    res.json({ user, token });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
 const eliminarUsuarioByUsername = async (req, res) => {
   try {
     const usuario = await UsuarioModel.findOneAndDelete({
@@ -59,4 +80,5 @@ module.exports = {
   getUsuarioByUsername,
   actualizarUsuarioByUsername,
   eliminarUsuarioByUsername,
+  verifyUsuarioByUsername
 };
