@@ -1,5 +1,4 @@
 const mercadopago = require("mercadopago");
-const Compra = require('../mongoDB/compraSchema');
 const frontUrl = process.env.frontURL;
 mercadopago.configure({
     access_token: process.env.mpaccesstoken
@@ -7,8 +6,7 @@ mercadopago.configure({
 
 const mercadoPagoController = {
     createPreference: async (req, res) => {
-    const { status, datosComprador, datosVendedor, productos,total } = req.body;
-
+    const { status, datosComprador, datosVendedor, productos,total,token } = req.body;
     const items = productos.map((producto) => {
         return {
           title: producto.nombre,
@@ -17,7 +15,7 @@ const mercadoPagoController = {
         };
       });
     let preference = {
-        metadata:JSON.stringify({ status, datosComprador, datosVendedor, productos,total }),
+        metadata:{ status, datosComprador, datosVendedor, productos,total,token },
         items: items,
         "back_urls": {
             "success": `${frontUrl}/success`,
