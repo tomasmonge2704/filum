@@ -13,6 +13,7 @@ const compraSchema = new mongoose.Schema({
       piso: { type: String },
     },
   },
+  pagoId:{type:String, default:null},
   datosVendedor: {
     numeroCuenta: { type: String },
     nombreCuenta: { type: String },
