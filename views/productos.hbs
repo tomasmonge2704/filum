@@ -63,6 +63,10 @@
           <input id="descripcion" value="" class="form-control" type="text" name="descripcion">
         </div>
         <div class="form-group">
+          <label for="name"><b>Ingrese el stock</b></label>
+          <input id="stock" value="" class="form-control" type="number" name="stock">
+        </div>
+        <div class="form-group">
           <label for="name"><b>Ingrese el precio</b></label>
           <input id="precio" value="" class="form-control" type="number" name="categoria">
         </div>
@@ -86,6 +90,7 @@
           <th scope="col">nombre</th>
           <th scope="col">descripcion</th>
           <th scope="col">categoria</th>
+          <th scope="col">stock</th>
           <th scope="col">precio</th>
           <th scope="col">editar</th>
           <th scope="col">borrar</th>
@@ -98,9 +103,10 @@
           <td>{{this.nombre}}</td>
           <td>{{this.descripcion}}</td>
           <td>{{this.categoria}}</td>
+          <td>{{this.stock}}</td>
           <td>{{this.precio}}</td>
           <td>
-            <button type="button" class="btn btn-secondary"data-toggle="modal" data-target="#exampleModal" onclick="openModal('{{this.nombre}}','{{this.categoria}}','{{this.descripcion}}','{{this.precio}}','{{this._id}}')">
+            <button type="button" class="btn btn-secondary"data-toggle="modal" data-target="#exampleModal" onclick="openModal('{{this.nombre}}','{{this.categoria}}','{{this.descripcion}}','{{this.precio}}','{{this._id}}','{{this.stock}}')">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-pencil-fill" viewBox="0 0 16 16">
                 <path
@@ -123,11 +129,12 @@
   </div>
 
 <script>
-function openModal(nombre,categoria,descripcion,precio,id){
+function openModal(nombre,categoria,descripcion,precio,id,stock){
 $( "#nombre" ).val(nombre);
 $( "#categoria" ).val(categoria);
 $( "#descripcion" ).val(descripcion);
 $( "#precio" ).val(precio);
+$( "#stock" ).val(stock);
 $( "#id" ).val(id);
 }
 function deleteUser(id){
@@ -145,12 +152,14 @@ const nombre = $( "#nombre" ).val();
 const categoria = $( "#categoria" ).val();
 const descripcion = $( "#descripcion" ).val();
 const precio = $( "#precio" ).val();
+const stock = $('#stock').val();
 const id = $( "#id" ).val();
 axios.put(`/api/producto/${id}`,{
 nombre:nombre,
 categoria:categoria,
 descripcion:descripcion,
-precio:precio
+precio:precio,
+stock:stock
 })
 .then((response) => {
 $( "#alert" ).addClass( "show" );
