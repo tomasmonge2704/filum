@@ -14,6 +14,7 @@ const mercadoPagoRoutes = require('./src/routes/mercadoPago');
 const comprasRoutes = require('./src/routes/compras')
 const indexRoutes = require('./src/routes/inicio');
 const exphbs = require('express-handlebars')
+const Handlebars = require('handlebars')
 const {connectMongoDB} = require('./src/mongoDB/connect')
 const flash = require('connect-flash');
 var cors = require('cors')
@@ -29,7 +30,13 @@ app.engine("hbs", exphbs.engine({
   partialsDir: __dirname + "/views"
 }))
 app.set("views", "./views");
-app.set("view engine", "hbs");
+app.set('view engine', 'hbs')
+Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+  if (v1 === v2) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(flash());

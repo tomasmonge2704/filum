@@ -2,7 +2,7 @@ const ProductoModel = require("../mongoDB/productosSchema");
 
 const getProductos = async (req, res) => {
   try {
-    const productos = await ProductoModel.find();
+    const productos = await ProductoModel.find().sort({ linea: 1 });
     res.json(productos);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -21,8 +21,8 @@ const getProductoById = async (req, res) => {
 
 const crearProducto = async (req, res) => {
   try {
-    const { nombre, precio, cantidad,stock,imageURL,categoria,descripcion } = req.body;
-    const producto = new ProductoModel({nombre:nombre, precio:precio,cantidad:cantidad,imageURL:imageURL,categoria:categoria,descripcion:descripcion,stock:stock});
+    const { nombre, precio, cantidad,stock,imageURL,categoria,descripcion,linea } = req.body;
+    const producto = new ProductoModel({nombre:nombre, precio:precio,cantidad:cantidad,imageURL:imageURL,categoria:categoria,descripcion:descripcion,stock:stock,linea:linea});
     await producto.save();
     res.status(201).json(producto);
   } catch (error) {
@@ -32,13 +32,19 @@ const crearProducto = async (req, res) => {
 
 const actualizarProducto = async (req, res) => {
   try {
-    const { nombre, precio, descripcion, categoria,stock } = req.body;
+    const { nombre, precio, descripcion, categoria,stock,imageURL,linea } = req.body;
     const updateFields = {};
     if (nombre !== undefined) {
       updateFields.nombre = nombre;
     }
     if (precio !== undefined) {
       updateFields.precio = precio;
+    }
+    if (linea !== undefined) {
+      updateFields.linea = linea;
+    }
+    if (imageURL !== undefined) {
+      updateFields.imageURL = imageURL;
     }
     if (descripcion !== undefined) {
       updateFields.descripcion = descripcion;

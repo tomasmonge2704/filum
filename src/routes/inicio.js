@@ -5,6 +5,33 @@ const ProductoModel = require("../mongoDB/productosSchema");
 const UsuarioModel = require("../mongoDB/userSchema");
 const comprasModel = require("../mongoDB/compraSchema")
 
+const categorias = [
+  "Picas",
+  "Portalighter",
+  "Portachurro",
+  "Macetas",
+  "Autoregadores",
+  "Floreros",
+  "Portauriculares",
+  "Keycaps",
+  "GPU holder",
+  "Orejitas para headphones 👉🏼👈🏾",
+  "Llaveros",
+  "Wallets",
+  "Boxes",
+  "Apoyavaso",
+  "Hangers",
+  "Pene",
+];  
+const lineas = [
+  "420 🍁",
+  "Garden 🪴",
+  "Gaymer 👾",
+  "✨misceláneo✨ 🎁",
+  "Deco",
+  "Kitchenware"
+]
+
 router.get("/", isAdmin, (req, res) => {
     res.render("home");
 });
@@ -19,8 +46,8 @@ router.get('/compras/id/:id', isAdmin, (req, res) => {
 });
 });
 router.get("/productos", isAdmin, (req, res) => {
-    ProductoModel.find({}).lean().then(function (result) {
-    res.render("productos", { result });
+    ProductoModel.find({}).sort({ linea: 1 }).lean().then(function (result) {
+    res.render("productos", { result,categorias,lineas });
   });
 });
 router.get("/usuarios", isAdmin, (req, res) => {
@@ -30,7 +57,7 @@ router.get("/usuarios", isAdmin, (req, res) => {
 });
 
 router.get('/register/producto', isAdmin, (req, res) => {
-    res.render('register')
+    res.render('register',{categorias,lineas})
 })
 
 module.exports = router;

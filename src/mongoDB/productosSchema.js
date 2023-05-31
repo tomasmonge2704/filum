@@ -9,6 +9,11 @@ const productoSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  linea:{
+    type:String,
+    required:true,
+    default:null
+  },
   cantidad: {
     type: Number,
   },
